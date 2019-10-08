@@ -33,7 +33,7 @@
     </section>
     <section v-else class="row controls">
         <div class="small-12 columns">
-            <button id="attack" v-on:click='attack'>ATTACK</button>
+            <button id="attack" v-on:click="attack">ATTACK</button>
             <button id="special-attack" v-on:click='specialAttack'>SPECIAL ATTACK</button>
             <button id="heal" v-on:click='heal'>HEAL</button>
             <button id="give-up" v-on:click='gameStarted = false'>GIVE UP</button>
@@ -42,8 +42,9 @@
     <section class="row log">
         <div class="small-12 columns">
             <ul>
-                <li v-for='hit in monsterLog'>
-                  Monster attacked player for {{ hit }}
+                <li v-for='hit in logs'>
+                    <span class='player' v-if="hit.startsWith('Player')">{{ hit }}</span>
+                    <span class='monster' v-else>{{ hit }}</span>
                 </li>
             </ul>
         </div>
@@ -57,25 +58,30 @@ new Vue({
     gameStarted: false,
     health: 100,
     monsterHealth: 100,
-    playerLog: [],
-    monsterLog: []
+    logs: []
+  },
+  methods: {
+    attack: function(){
+      // decrese the health of the monster by a random number between 1 and 15
+      var randNum = Math.floor(Math.random() * 15) + 1;
+      if(this.monsterHealth >= 0){
+        this.monsterHealth -= randNum;
+        // push the random number and a string to the logs array
+        this.logs.push('Player attacked the monster for ' + randNum);
+      }
+
+    }
   },
   computed: {
-    attack: function(){
-      return true;
-    },
     specialAttack: function (){
       return true;
     },
     heal: function() {
       return true;
-    },
-    message: function(){
-
     }
   },
   watch: {
-    // automatic attack of a monster
+    // watch for getStarted change to automatically hit the player
     gameStarted: function(){
         var self = this;
         // fire up this function every 2 seconds
@@ -84,8 +90,8 @@ new Vue({
           var randNum = Math.floor(Math.random() * 10) + 1;
           // if  gameStarted changed and that change equals to true then ...
           if(self.gameStarted === true && self.health >= 0){
-            // ...add the random number to the monsterLog array
-            self.monsterLog.push(randNum);
+            // ...push the random number and a string to the logs array
+            self.logs.push('Monster attacked the player for ' + randNum);
             // ...decrease the players health by randNum
             self.health -= randNum;
           }
