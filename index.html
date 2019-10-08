@@ -13,7 +13,7 @@
             <h1 class="text-center">YOU</h1>
             <div class="healthbar">
                 <div class="healthbar text-center" v-bind:style="{width: health + '%'}" style="background-color: green; margin: 0; color: white;">
-                  100
+                  {{ health }}
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <h1 class="text-center">MONSTER</h1>
             <div class="healthbar" >
                 <div class="healthbar text-center" v-bind:style="{width: monsterHealth + '%'}" style="background-color: green; margin: 0; color: white;">
-                  100
+                  {{ monsterHealth }}
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
     <section v-else class="row controls">
         <div class="small-12 columns">
             <button id="attack" v-on:click="attack">ATTACK</button>
-            <button id="special-attack" v-on:click='specialAttack'>SPECIAL ATTACK</button>
+            <button id="special-attack" v-on:click='specialAttack' v-bind:disabled='disableBtn'>SPECIAL ATTACK</button>
             <button id="heal" v-on:click='heal'>HEAL</button>
             <button id="give-up" v-on:click='gameStarted = false'>GIVE UP</button>
         </div>
@@ -43,8 +43,10 @@
         <div class="small-12 columns">
             <ul>
                 <li v-for='hit in logs'>
-                    <span class='player' v-if="hit.startsWith('Player')">{{ hit }}</span>
-                    <span class='monster' v-else>{{ hit }}</span>
+                    <!-- if the string inside logs starts with Player then color the text to blue -->
+                    <span class='player message' v-if="hit.startsWith('Player')">{{ hit }}</span>
+                    <!-- ...otherwise it was the monster and color the text to red -->
+                    <span class='monster message' v-else>{{ hit }}</span>
                 </li>
             </ul>
         </div>
@@ -58,26 +60,38 @@ new Vue({
     gameStarted: false,
     health: 100,
     monsterHealth: 100,
-    logs: []
+    logs: [],
+    disableBtn: false
   },
   methods: {
     attack: function(){
-      // decrese the health of the monster by a random number between 1 and 15
-      var randNum = Math.floor(Math.random() * 15) + 1;
-      if(this.monsterHealth >= 0){
+      // decrese the health of the monster by a random number between 1 and 10
+      var randNum = Math.floor(Math.random() * 10) + 1;
+      if(this.monsterHealth > 0){
         this.monsterHealth -= randNum;
         // push the random number and a string to the logs array
         this.logs.push('Player attacked the monster for ' + randNum);
       }
-
-    }
-  },
-  computed: {
+    },
+    // every three seconds fire up the function
     specialAttack: function (){
-      return true;
+      var self = this;
+      this.disableBtn = true;
+      // decrese the health of the monster by a random number between 15 and 30
+      var specialAttack = Math.floor(Math.random() * (30 - 15 + 1) + 15);
+      if(this.monsterHealth >= 0){
+        this.monsterHealth -= specialAttack;
+        // push the random number and a string to the logs array
+        this.logs.push('Player attacked the monster with a special skill for ' + specialAttack);
+        // allow the player to use the special attack only every 3 seconds
+        setTimeout(function(){
+          self.disableBtn = false;
+        }, 3000);
+      }
+
     },
     heal: function() {
-      return true;
+
     }
   },
   watch: {
@@ -89,13 +103,13 @@ new Vue({
           // get random number between 1 - 10
           var randNum = Math.floor(Math.random() * 10) + 1;
           // if  gameStarted changed and that change equals to true then ...
-          if(self.gameStarted === true && self.health >= 0){
+          if(self.gameStarted === true && self.health > 0){
             // ...push the random number and a string to the logs array
             self.logs.push('Monster attacked the player for ' + randNum);
             // ...decrease the players health by randNum
             self.health -= randNum;
           }
-        }, 1000)
+        }, 2000)
     }
   }
 

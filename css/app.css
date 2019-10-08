@@ -11,12 +11,20 @@
     transition: width 500ms;
 }
 
+.message {
+  display: block;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
 .player {
   color: blue;
+  background-color: rgba(0, 0,255, .3);
 }
 
 .monster {
   color: red;
+  background-color: rgba(255, 0, 0, .3);
 }
 
 .controls, .log {
