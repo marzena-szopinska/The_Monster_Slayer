@@ -13,7 +13,8 @@
             <h1 class="text-center">YOU</h1>
             <div class="healthbar">
                 <div class="healthbar text-center" v-bind:style="{width: health + '%'}" style="background-color: green; margin: 0; color: white;">
-                  {{ health }}
+                  <span v-if='health <= 0'> 0 </span>
+                  <span v-else> {{ health }} </span>
                 </div>
             </div>
         </div>
@@ -21,7 +22,8 @@
             <h1 class="text-center">MONSTER</h1>
             <div class="healthbar" >
                 <div class="healthbar text-center" v-bind:style="{width: monsterHealth + '%'}" style="background-color: green; margin: 0; color: white;">
-                  {{ monsterHealth }}
+                  <span v-if='monsterHealth <= 0'> 0 </span>
+                  <span v-else> {{ monsterHealth }} </span>
                 </div>
             </div>
         </div>
