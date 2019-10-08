@@ -42,8 +42,8 @@
     <section class="row log">
         <div class="small-12 columns">
             <ul>
-                <li>
-
+                <li v-for='hit in monsterLog'>
+                  Monster attacked player for {{ hit }}
                 </li>
             </ul>
         </div>
@@ -68,25 +68,28 @@ new Vue({
       return true;
     },
     heal: function() {
-    return true;
-  },
-  stopGame: function(){
-    this.health = 100;
-    this.gameStarted = false;
-    this.monsterHealth = 100;
-    this.playerLog = [];
-    this.monsterLog = [];
-  }
+      return true;
+    },
+    message: function(){
+
+    }
   },
   watch: {
     // automatic attack of a monster
     gameStarted: function(){
         var self = this;
+        // fire up this function every 2 seconds
         setInterval(function() {
+          // get random number between 1 - 10
           var randNum = Math.floor(Math.random() * 10) + 1;
-          if(self.gameStarted === true)
-          self.health -= randNum;
-        }, 2000)
+          // if  gameStarted changed and that change equals to true then ...
+          if(self.gameStarted === true && self.health >= 0){
+            // ...add the random number to the monsterLog array
+            self.monsterLog.push(randNum);
+            // ...decrease the players health by randNum
+            self.health -= randNum;
+          }
+        }, 1000)
     }
   }
 
