@@ -12,16 +12,16 @@
         <div class="small-6 columns">
             <h1 class="text-center">YOU</h1>
             <div class="healthbar">
-                <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+                <div class="healthbar text-center" v-bind:style="{width: health + '%'}" style="background-color: green; margin: 0; color: white;">
+                  100
                 </div>
             </div>
         </div>
         <div class="small-6 columns">
             <h1 class="text-center">MONSTER</h1>
-            <div class="healthbar">
-                <div class="healthbar text-center" style="background-color: green; margin: 0; color: white;">
-
+            <div class="healthbar" >
+                <div class="healthbar text-center" v-bind:style="{width: monsterHealth + '%'}" style="background-color: green; margin: 0; color: white;">
+                  100
                 </div>
             </div>
         </div>
@@ -33,10 +33,10 @@
     </section>
     <section v-else class="row controls">
         <div class="small-12 columns">
-            <button id="attack">ATTACK</button>
-            <button id="special-attack">SPECIAL ATTACK</button>
-            <button id="heal">HEAL</button>
-            <button id="give-up">GIVE UP</button>
+            <button id="attack" v-on:click='attack'>ATTACK</button>
+            <button id="special-attack" v-on:click='specialAttack'>SPECIAL ATTACK</button>
+            <button id="heal" v-on:click='heal'>HEAL</button>
+            <button id="give-up" v-on:click='gameStarted = false'>GIVE UP</button>
         </div>
     </section>
     <section class="row log">
@@ -54,8 +54,42 @@
 new Vue({
   el: '#app',
   data: {
-    gameStarted: false
+    gameStarted: false,
+    health: 100,
+    monsterHealth: 100,
+    playerLog: [],
+    monsterLog: []
+  },
+  computed: {
+    attack: function(){
+      return true;
+    },
+    specialAttack: function (){
+      return true;
+    },
+    heal: function() {
+    return true;
+  },
+  stopGame: function(){
+    this.health = 100;
+    this.gameStarted = false;
+    this.monsterHealth = 100;
+    this.playerLog = [];
+    this.monsterLog = [];
   }
+  },
+  watch: {
+    // automatic attack of a monster
+    gameStarted: function(){
+        var self = this;
+        setInterval(function() {
+          var randNum = Math.floor(Math.random() * 10) + 1;
+          if(self.gameStarted === true)
+          self.health -= randNum;
+        }, 2000)
+    }
+  }
+
 })
 
 </script>
