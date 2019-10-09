@@ -80,7 +80,7 @@ new Vue({
       if(this.monsterHealth > 0 && this.won != true){
         this.monsterHealth -= randNum;
         // push the random number and a string to the logs array
-        this.logs.push('Player attacked the monster for ' + randNum);
+        this.logs.unshift('Player attacked the monster for ' + randNum);
       }
     },
     // every three seconds fire up the function
@@ -92,7 +92,7 @@ new Vue({
         var specialAttack = Math.floor(Math.random() * (30 - 15 + 1) + 15);
         this.monsterHealth -= specialAttack;
         // push the random number and a string to the logs array
-        this.logs.push('Player attacked the monster with a special skill for ' + specialAttack);
+        this.logs.unshift('Player attacked the monster with a special skill for ' + specialAttack);
         // allow the player to use the special attack only every 3 seconds
         setTimeout(function(){
           self.disableBtn = false;
@@ -105,7 +105,7 @@ new Vue({
         var heal = 5;
         this.health += heal;
         // push the heal number and a string to the logs array
-        this.logs.push("Health of the player increased by " + heal);
+        this.logs.unshift("Health of the player increased by " + heal);
       }
     },
     reset: function(){
@@ -141,7 +141,7 @@ new Vue({
           // if  gameStarted changed and that change equals to true then ...
           if(self.gameStarted === true && self.health > 0 && self.won != true){
             // ...push the random number and a string to the logs array
-            self.logs.push('Monster attacked the player for ' + randNum);
+            self.logs.unshift('Monster attacked the player for ' + randNum);
             // ...decrease the players health by randNum
             self.health -= randNum;
           }
