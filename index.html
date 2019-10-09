@@ -28,9 +28,9 @@
             </div>
         </div>
     </section>
-    <section class='row'>
+    <section class="row">
       <div class="small-12 columns">
-          <h2 v-if='message' class='text-center'> {{ message }} </h2>
+          <h1 class="text-center win"> {{ win }} </h1>
       </div>
     </section>
     <section v-if='!gameStarted' class="row controls">
@@ -43,7 +43,7 @@
             <button id="attack" v-on:click="attack">ATTACK</button>
             <button id="special-attack" v-on:click='specialAttack' v-bind:disabled='disableBtn'>SPECIAL ATTACK</button>
             <button id="heal" v-on:click='heal'>HEAL</button>
-            <button id="give-up" v-on:click='reset'>GIVE UP</button>
+            <button id="give-up" v-on:click='reset'>RESTART</button>
         </div>
     </section>
     <section class="row log">
@@ -71,7 +71,7 @@ new Vue({
     monsterHealth: 100,
     logs: [],
     disableBtn: false,
-    message: 'Good Luck!'
+    won: false
   },
   methods: {
     attack: function(){
@@ -87,7 +87,7 @@ new Vue({
     specialAttack: function (){
       var self = this;
       this.disableBtn = true;
-      if(this.monsterHealth > 0){
+      if(this.monsterHealth > 0 && this.won != true){
         // decrese the health of the monster by a random number between 15 and 30
         var specialAttack = Math.floor(Math.random() * (30 - 15 + 1) + 15);
         this.monsterHealth -= specialAttack;
@@ -96,7 +96,7 @@ new Vue({
         // allow the player to use the special attack only every 3 seconds
         setTimeout(function(){
           self.disableBtn = false;
-        }, 3000);
+        }, 5000);
       }
 
     },
@@ -114,6 +114,20 @@ new Vue({
       this.health = 100;
       this.monsterHealth = 100;
       this.logs = [];
+      this.won = false;
+    }
+  },
+  computed: {
+    win: function() {
+      if(this.monsterHealth <= 0){
+        this.won = true;
+        return 'THE PLAYER WON!';
+      }
+
+      if(this.health <= 0){
+        this.won = true;
+        return 'THE MONSTER WON!';
+      }
     }
   },
   watch: {
@@ -125,16 +139,13 @@ new Vue({
           // get random number between 1 - 10
           var randNum = Math.floor(Math.random() * 10) + 1;
           // if  gameStarted changed and that change equals to true then ...
-          if(self.gameStarted === true && self.health > 0){
+          if(self.gameStarted === true && self.health > 0 && self.won != true){
             // ...push the random number and a string to the logs array
             self.logs.push('Monster attacked the player for ' + randNum);
             // ...decrease the players health by randNum
             self.health -= randNum;
           }
         }, 2000)
-    },
-    message: function(){
-
     }
   }
 
