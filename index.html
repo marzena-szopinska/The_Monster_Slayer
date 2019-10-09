@@ -77,7 +77,7 @@ new Vue({
     attack: function(){
       // decrese the health of the monster by a random number between 1 and 10
       var randNum = Math.floor(Math.random() * 10) + 1;
-      if(this.monsterHealth > 0){
+      if(this.monsterHealth > 0 && this.won != true){
         this.monsterHealth -= randNum;
         // push the random number and a string to the logs array
         this.logs.push('Player attacked the monster for ' + randNum);
