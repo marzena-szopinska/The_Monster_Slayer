@@ -46,7 +46,7 @@
             <button id="give-up" v-on:click='reset'>RESTART</button>
         </div>
     </section>
-    <section class="row log">
+    <section class="row log" v-if='logs.length > 0'>
         <div class="small-12 columns">
             <ul>
                 <li v-for='hit in logs'>
