@@ -77,12 +77,12 @@ new Vue({
   },
   methods: {
     attack: function(){
-      // decrese the health of the monster by a random number between 1 and 10
-      var randNum = Math.floor(Math.random() * 10) + 1;
+      // decrese the health of the monster by a random number between 3 and 10
+      var damage = this.setDamage(3, 10);
       if(this.monsterHealth > 0 && this.won != true){
-        this.monsterHealth -= randNum;
+        this.monsterHealth -= damage;
         // push the random number and a string to the logs array
-        this.logs.unshift('Player attacked the monster for ' + randNum);
+        this.logs.unshift('Player attacked the monster for ' + damage);
       }
     },
     // every three seconds fire up the function
@@ -91,10 +91,10 @@ new Vue({
       this.disableSpecialAttack = true;
       if(this.monsterHealth > 0 && this.won != true){
         // decrese the health of the monster by a random number between 15 and 30
-        var specialAttack = Math.floor(Math.random() * (30 - 15 + 1) + 15);
-        this.monsterHealth -= specialAttack;
+        var damage = this.setDamage(15, 30);
+        this.monsterHealth -= damage;
         // push the random number and a string to the logs array
-        this.logs.unshift('Player attacked the monster with a special skill for ' + specialAttack);
+        this.logs.unshift('Player attacked the monster with a special skill for ' + damage);
         // allow the player to use the special attack only every 3 seconds
         setTimeout(function(){
           self.disableSpecialAttack = false;
@@ -117,6 +117,10 @@ new Vue({
       this.monsterHealth = 100;
       this.logs = [];
       this.won = false;
+    },
+    setDamage: function(min, max){
+      var attack = Math.floor(Math.random() * (max - min + 1) + min);
+      return attack;
     }
   },
   computed: {
@@ -138,19 +142,18 @@ new Vue({
         var self = this;
         // fire up this function every 2 seconds
         setInterval(function() {
-          // get random number between 1 - 10
-          var randNum = Math.floor(Math.random() * 10) + 1;
+          // get random number between 2 - 10
+          var damage = self.setDamage(2, 10);
           // if  gameStarted changed and that change equals to true then ...
-          if(self.gameStarted === true && self.health > 0 && self.won != true){
+          if(self.health > 0 && self.won != true && self.gameStarted === true){
             // ...push the random number and a string to the logs array
-            self.logs.unshift('Monster attacked the player for ' + randNum);
+            self.logs.unshift('Monster attacked the player for ' + damage);
             // ...decrease the players health by randNum
-            self.health -= randNum;
+            self.health -= damage;
           }
         }, 2000)
     }
   }
-
 })
 
 </script>
