@@ -41,7 +41,7 @@
     <section v-else class="row controls">
         <div class="small-12 columns">
             <button id="attack" v-on:click="attack">ATTACK</button>
-            <button id="special-attack" v-on:click='specialAttack' v-bind:disabled='disableBtn'>SPECIAL ATTACK</button>
+            <button id="special-attack" v-on:click='specialAttack' v-bind:disabled='disableSpecialAttack'>SPECIAL ATTACK</button>
             <button id="heal" v-on:click='heal'>HEAL</button>
             <button id="give-up" v-on:click='reset'>RESTART</button>
         </div>
@@ -70,7 +70,9 @@ new Vue({
     health: 100,
     monsterHealth: 100,
     logs: [],
-    disableBtn: false,
+    disableSpecialAttack: false,
+    dissableAttack: false,
+    disableHeal: false,
     won: false
   },
   methods: {
@@ -86,7 +88,7 @@ new Vue({
     // every three seconds fire up the function
     specialAttack: function (){
       var self = this;
-      this.disableBtn = true;
+      this.disableSpecialAttack = true;
       if(this.monsterHealth > 0 && this.won != true){
         // decrese the health of the monster by a random number between 15 and 30
         var specialAttack = Math.floor(Math.random() * (30 - 15 + 1) + 15);
@@ -95,7 +97,7 @@ new Vue({
         this.logs.unshift('Player attacked the monster with a special skill for ' + specialAttack);
         // allow the player to use the special attack only every 3 seconds
         setTimeout(function(){
-          self.disableBtn = false;
+          self.disableSpecialAttack = false;
         }, 5000);
       }
 
