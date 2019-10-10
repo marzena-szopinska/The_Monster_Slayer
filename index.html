@@ -42,7 +42,7 @@
         <div class="small-12 columns">
             <button id="attack" v-on:click="attack">ATTACK</button>
             <button id="special-attack" v-on:click='specialAttack' v-bind:disabled='disableSpecialAttack'>SPECIAL ATTACK</button>
-            <button id="heal" v-on:click='heal'>HEAL</button>
+            <button id="heal" v-on:click='heal' v-bind:disabled='disableHeal'>HEAL</button>
             <button id="give-up" v-on:click='reset'>RESTART</button>
         </div>
     </section>
@@ -71,18 +71,24 @@ new Vue({
     monsterHealth: 100,
     logs: [],
     disableSpecialAttack: false,
-    dissableAttack: false,
+    attackReady: true,
     disableHeal: false,
     won: false
   },
   methods: {
     attack: function(){
+      var self = this;
       // decrese the health of the monster by a random number between 3 and 10
       var damage = this.setDamage(3, 10);
-      if(this.monsterHealth > 0 && this.won != true){
+      if(this.monsterHealth > 0 && this.won != true && this.attackReady === true){
         this.monsterHealth -= damage;
         // push the random number and a string to the logs array
         this.logs.unshift('Player attacked the monster for ' + damage);
+        // block net attack for 1 second
+        this.attackReady = false;
+        setTimeout(function(){
+          self.attackReady = true;
+        }, 1000);
       }
     },
     // every three seconds fire up the function
@@ -98,16 +104,21 @@ new Vue({
         // allow the player to use the special attack only every 3 seconds
         setTimeout(function(){
           self.disableSpecialAttack = false;
-        }, 5000);
+        }, 3000);
       }
 
     },
     heal: function() {
+      var self = this;
+      this.disableHeal = true;
       if(this.health > 0){
         var heal = 5;
         this.health += heal;
         // push the heal number and a string to the logs array
         this.logs.unshift("Health of the player increased by " + heal);
+        setTimeout(function(){
+          self.disableHeal = false;
+        }, 4000);
       }
     },
     reset: function(){
@@ -137,8 +148,8 @@ new Vue({
     }
   },
   watch: {
-    // watch for getStarted change to automatically hit the player
-    gameStarted: function(){
+    //watch for getStarted change to automatically hit the player
+    gameStarted: function(value){
         var self = this;
         // fire up this function every 2 seconds
         setInterval(function() {
